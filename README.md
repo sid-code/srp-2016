@@ -23,9 +23,24 @@ tedious. So, I wrote a Nim program to send the same requests the web interface
 sends to the server and parse the JSON into my own internal representation of a
 KDG and then do transformations and what not.
 
+If you want to try it out for yourself, [get the nim compiler][6] and run
+```
+nim c simpleclient
+./simpleclient "Who killed Abraham Lincoln?"
+```
+
+This will display a slightly modified knowledge description graph for the question.
+
+As I am developing this on a Linux system, I have no idea whether it will work on
+a Windows system.
+
+## License
+
+All code here is released under the MIT license.
 
 [1]: http://sidharthkulkarnisrp.blogspot.com/
 [2]: http://kparser.org
 [3]: http://www.fulton.asu.edu/~bioai/
 [4]: http://www-nlp.stanford.edu/software/sempre/
 [5]: http://cs.stanford.edu/~pliang/papers/freebase-emnlp2013.pdf
+[6]: http://nim-lang.org/download.html
