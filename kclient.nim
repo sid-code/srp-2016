@@ -55,6 +55,3 @@ proc kparse*(text: string): Future[seq[KDG]] {.async.} =
   let parsed = parseJson(resp)
   
   return convertToKDGs(parsed)
-import os
-let kdgs = waitFor kparse(commandLineParams()[0])
-for kg in kdgs: echo kg.hoistAgent()
