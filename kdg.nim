@@ -64,21 +64,3 @@ proc `$`*(kgraph: KDG): string =
   kgraph.traverse(proc(subgraph: KDG, edgeFrom: string, depth: int) =
     res &= repeat("  ", depth) & edgeFrom & ": " & $subgraph.node & "\n")
   return res
-
-when isMainModule:
-  var dog3 = KNode(name: "dog-3", typ: ntEntity)
-  var dog = KNode(name: "dog", typ: ntClass)
-  var animal = KNode(name: "animal", typ: ntClass)
-  var big2 = KNode(name: "big-2", typ: ntEntity)
-  var big = KNode(name: "big", typ: ntClass)
-  var size = KNode(name: "size_descriptive", typ: ntClass)
-
-  var kgraph = newKDG(dog3)
-  kgraph.addEdgeNode(dog3, "instance_of", dog)
-  kgraph.addEdgeNode(dog, "is_subclass_of", animal)
-  kgraph.addEdgeNode(dog3, "trait", big2)
-  kgraph.addEdgeNode(big2, "instance_of", big)
-  kgraph.addEdgeNode(big, "is_subclass_of", size)
-
-  echo kgraph
-  echo kgraph.subgraphFrom(big2)
