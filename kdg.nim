@@ -60,7 +60,7 @@ proc `$`*(node: KNode): string =
   node.typ.nodeTypeFormat.format(node.name)
 
 proc `$`*(kgraph: KDG): string =
-  var res = ""
+  var res = " "
   kgraph.traverse(proc(subgraph: KDG, edgeFrom: string, depth: int) =
-    res &= repeat("  ", depth) & edgeFrom & ": " & $subgraph.node & "\n")
+    res &= repeat("  |", depth) & "\b" & edgeFrom & ": " & $subgraph.node & "\n")
   return res
