@@ -1,4 +1,4 @@
-import asyncdispatch, httpclient, strutils, cgi, json
+import cachedapi, strutils, cgi, json
 
 import kdg, kdgtools
 
@@ -6,12 +6,11 @@ const
   # kparserURL = "http://requestb.in/1dtii3k1"
   kparserURL = "http://bioai8core.fulton.asu.edu/kparser/ParserServlet"
 
-let client = newAsyncHttpClient()
+var kparserAPI = newCachedAPI("kparser", kparserURL)
 
-proc makeRequest(text: string, corefs = false): Future[string] {.async.} =
-  let fullURL = "$1?text=$2&useCoreference=$3".format(kparserURL, encodeUrl(text), corefs)
-  let resp = await client.get(fullURL)
-  return resp.body
+proc makeRequest(text: string, corefs = false): Option[string] =
+  let params = {"text": text, "useCoreference": $corefs}.toTable()
+  return kparserAPI.get(params)
 
 proc getNodeType(data: JsonNode): KNodeType =
   let jtrue = newJBool(true)
@@ -50,8 +49,13 @@ proc convertToKDGs(data: JsonNode): seq[KDG] =
     assert edge == "root"
     result.add(kgraph)
 
-proc kparse*(text: string): Future[seq[KDG]] {.async.} =
-  let resp = await makeRequest(text)
-  let parsed = parseJson(resp)
-  
-  return convertToKDGs(parsed)
+proc parseKDGJson(kdgJson: string): seq[KDG] {.procvar.} =
+  try:
+    let parsed = parseJson(kdgJson)
+    return convertToKDGs(parsed)
+  except:
+    return @[blankGraph]
+
+proc kparse*(text: string): Option[seq[KDG]] =
+  let resp = makeRequest(text)
+  return resp.map(parseKDGJson)
