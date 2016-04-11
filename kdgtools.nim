@@ -1,4 +1,5 @@
 import sequtils
+import strutils
 import kdg
 
 # inverse edge types.
@@ -88,3 +89,31 @@ proc hoistAgent*(kgraph: KDG): tuple[success: bool, kgraph: KDG] =
       return kgraph.hoistNode(child.to.node)
 
   return (false, kgraph)
+
+proc getEntityInformation*(kgraph: KDG): seq[string] =
+  newSeq(result, 0)
+  if kgraph == blankGraph:
+    return
+
+  template recurse(k: KDG) =
+    result.add(getEntityInformation(k))
+
+  #assert(kgraph.node.typ == ntEntity)
+
+  result.add(kgraph.node.name.split('-')[0])
+
+  recurse(kgraph["modifier"])
+  recurse(kgraph["product_of"])
+  recurse(kgraph["is_part_of"])
+  recurse(kgraph["is_goal_of"])
+  recurse(kgraph["by_means_of"])
+  recurse(kgraph["dependent"])
+  recurse(kgraph["is_inside_location"])
+  recurse(kgraph["size"])
+
+  for complement in kgraph.getAll("complement_word"):
+    recurse(complement)
+  for trait in kgraph.getAll("trait"):
+    if trait["instance_of"] !@= "?":
+      recurse(trait)
+
