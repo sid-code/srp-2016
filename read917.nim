@@ -59,13 +59,13 @@ for node in parsed.items():
 
   let kgraphsOption = kparse(utterance)
   if not kgraphsOption.isSome():
-    #echo red, utterance, ": SKIPPING, parse failed", reset
+    echo red, utterance, ": SKIPPING, parse failed", reset
     continue
 
   let kgraphs = kgraphsOption.get
 
   if kgraphs.len != 1 or kgraphs[0] == blankGraph:
-    #echo red, utterance, ": SKIPPING, broken parse", reset
+    echo red, utterance, ": SKIPPING, broken parse", reset
     continue
 
   inc totalNotBroken
@@ -75,7 +75,7 @@ for node in parsed.items():
   let sexp = parseSexp(targetFormula)
   let (simple, lhs, rhs) = simpleComponents(sexp)
   if not simple:
-    #echo red, utterance, ": SKIPPING, not simple", reset
+    echo red, utterance, ": SKIPPING, not simple", reset
     continue
 
   inc totalSimple
@@ -95,7 +95,7 @@ for node in parsed.items():
       searches.add("\n")
       if rhs in matchedEntities:
         found = true
-        #echo bgreen, utterance, ": ", path.join(" -> "), reset
+        echo bgreen, utterance, ": ", path.join(" -> "), reset
 
   if found:
     inc totalFound
