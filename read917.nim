@@ -4,7 +4,6 @@ import httpclient
 import sexp
 import strutils
 import sequtils
-import options
 
 import kdg
 import kclient

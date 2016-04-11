@@ -1,4 +1,5 @@
-import cachedapi, strutils, cgi, json
+import cachedapi, strutils, cgi, json, options
+export options
 
 import kdg, kdgtools
 
