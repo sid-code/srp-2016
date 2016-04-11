@@ -70,3 +70,33 @@ proc `$`*(kgraph: KDG): string =
   kgraph.traverse(proc(subgraph: KDG, edgeFrom: string, depth: int) =
     res &= repeat("  ", depth) & edgeFrom & ": " & $subgraph.node & "\n")
   return res
+
+# syntactic sugar for checking if a node's name is 'teststr'
+proc `@=`*(node: KNode, teststr: string): bool =
+  node.name == teststr
+proc `!@=`*(node: KNode, teststr: string): bool =
+  node.name != teststr
+
+proc `@=`*(kgraph: KDG, teststr: string): bool =
+  kgraph.node.name == teststr
+proc `!@=`*(kgraph: KDG, teststr: string): bool =
+  kgraph.node.name != teststr
+
+let blankGraph* = newKDG(KNode(name: "nothing", typ: ntEntity))
+
+# looks for any of 'edges' in the graph and returns it
+# if none are found, blankGraph is returned
+proc `[]`*(kgraph: KDG, edges: varargs[string]): KDG =
+  for child in kgraph.children:
+    let (childEdge, childGraph) = child
+    for edge in edges:
+      if childEdge == edge: return childGraph
+
+  return blankGraph
+
+# same idea as previous one but is an iterator instead
+iterator getAll*(kgraph: KDG, edges: varargs[string]): KDG =
+  for child in kgraph.children:
+    let (childEdge, childGraph) = child
+    for edge in edges:
+      if childEdge == edge: yield childGraph
