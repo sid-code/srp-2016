@@ -48,6 +48,12 @@ proc traverse*(kgraph: KDG, cb: proc (subgraph: KDG, edgeFrom: string, depth: in
   for child in kgraph.children:
     traverse(child.to, cb, child.edgeType, depth + 1)
 
+proc traverseWithPath*(kgraph: KDG, cb: proc (subgraph: KDG, path: seq[string], depth: int), path = @["root"], depth = 0) =
+  if kgraph == nil: return
+  cb(kgraph, path, depth)
+  for child in kgraph.children:
+    traverseWithPath(child.to, cb, path & child.edgeType, depth + 1)
+
 proc subgraphFrom*(kgraph: KDG, subRoot: KNode): KDG =
   var subgraph: KDG = nil
   kgraph.traverse(proc (graph: KDG, edgeFrom: string, depth: int) =
