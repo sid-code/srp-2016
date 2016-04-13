@@ -17,13 +17,13 @@ const
 
   
 type
-  ObjEssence* = object
-    name*: string
-    blank*: bool
-    isQuestion*: bool
-    hasOf*: bool
-    hasModifier*: bool
-    hasComplement*: bool
+  ObjEssence = object
+    name: string
+    blank: bool
+    isQuestion: bool
+    hasOf: bool
+    hasModifier: bool
+    hasComplement: bool
     # hasWith*: bool
   Essence* = object
     toBe*: bool
