@@ -100,3 +100,10 @@ iterator getAll*(kgraph: KDG, edges: varargs[string]): KDG =
     let (childEdge, childGraph) = child
     for edge in edges:
       if childEdge == edge: yield childGraph
+
+proc dig*(kgraph: KDG, path: varargs[string]): KDG =
+  result = kgraph
+  for edge in path:
+    result = result[edge]
+    if result == blankGraph:
+      return
