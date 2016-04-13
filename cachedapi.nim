@@ -60,7 +60,7 @@ proc get*(capi: CachedAPI, path: string, params: Table[string, string]): Option[
   try:
     return some(capi.getNoCache(encodedParams))
   except:
-    stderr.write(getCurrentExceptionMsg() & "\n")
+    stderr.write(capi.name, " error: ", getCurrentExceptionMsg(), "\n")
     return none(string)
 
 proc get*(capi: CachedAPI, params: Table[string, string]): Option[string] =
