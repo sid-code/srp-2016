@@ -8,6 +8,8 @@ import sequtils
 import kdg
 import kclient
 import answering
+import essence
+import essencePathModel
 
 import dandelion/dandelion
 import freebase/fbapi
@@ -51,6 +53,8 @@ var totalSimple = 0
 var totalFound = 0
 var totalNotFound = 0
 
+var model = initEPModel()
+
 for node in parsed.items():
 
   var utterance = node["utterance"].str & "?"
@@ -71,6 +75,7 @@ for node in parsed.items():
   inc totalNotBroken
 
   let kgraph = kgraphs[0]
+  let essence = getEssence(kgraph)
 
   let sexp = parseSexp(targetFormula)
   let (simple, lhs, rhs) = simpleComponents(sexp)
@@ -96,9 +101,11 @@ for node in parsed.items():
       if rhs in matchedEntities:
         found = true
         echo bgreen, utterance, ": ", path.join(" -> "), reset
+        model.addPair(essence, path)
 
   if found:
     inc totalFound
+
   else:
     echo bred, utterance, ": NOT FOUND", reset
     echo searches
